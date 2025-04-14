@@ -77,12 +77,12 @@ jobs:
           OUTPUT_FILE: report.md
 
       - name: Upload results
-        uses: actions/upload-artifact@v4 # <<<--- บรรทัดนี้
+        uses: actions/upload-artifact@v4
         with:
-          name: laser-output-${{ github.run_id }}
-          path: |
-            strategy.json
-            gcode.txt
-            process.log
-            report.md
-            ${{ github.event.inputs.output }}
+         name: laser-output
+         path: |
+           strategy.json
+           gcode.txt
+           process.log
+           report.md
+           ${{ github.event.inputs.output }}
