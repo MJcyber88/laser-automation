@@ -1,0 +1,53 @@
+name: Cut and Engrave Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      material:
+        description: 'Material to process (e.g., steel)'
+        required: true
+        default: 'steel'
+      thickness:
+        description: 'Thickness of the material (mm)'
+        required: true
+        default: '5'
+      design:
+        description: 'Design file path (e.g., logo.png)'
+        required: true
+        default: 'logo.png'
+      output:
+        description: 'Output file name'
+        required: true
+        default: 'finished_product'
+
+jobs:
+  process-laser:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: Run laser task
+        run: |
+          python laser_task.py
+        env:
+          MATERIAL: ${{ github.event.inputs.material }}
+          THICKNESS: ${{ github.event.inputs.thickness }}
+          DESIGN: ${{ github.event.inputs.design }}
+          OUTPUT: ${{ github.event.inputs.output }}
+
+      - name: Upload result
+        uses: actions/upload-artifact@v3
+        with:
+          name: laser-output
+          path: ${{ github.event.inputs.output }}
