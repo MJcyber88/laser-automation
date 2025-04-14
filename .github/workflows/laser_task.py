@@ -21,11 +21,24 @@ def simulate_laser_task(material, thickness, design, output):
     return result
 
 if __name__ == "__main__":
-    # ดึงอินพุตจากตัวแปรสภาพแวดล้อม (กำหนดโดย GitHub Actions)
-    material = os.getenv("MATERIAL", "steel")
-    thickness = float(os.getenv("THICKNESS", "5"))
-    design = os.getenv("DESIGN", "logo.png")
-    output = os.getenv("OUTPUT", "finished_product")
-    
-    result = simulate_laser_task(material, thickness, design, output)
-    print("Task Result:", result)
+    # กำหนดค่า (เอา task_type ออก)
+    task_inputs = {
+        "material": "steel",         # ค่าที่คุณต้องการส่ง
+        "thickness": 5,            # ค่าที่คุณต้องการส่ง
+        "design": "logo.png",        # ค่าที่คุณต้องการส่ง
+        "output": "finished_product" # ค่าที่คุณต้องการส่ง
+    }
+    branch_ref = "main"
+
+    # เตรียม arguments สำหรับฟังก์ชัน (ปรับตามวิธีที่คุณเรียกฟังก์ชัน)
+    # ตัวอย่าง ถ้าฟังก์ชันยังรับ task_type แต่เราไม่ต้องการให้ส่งเป็น input
+    run_args = {
+        "task_type": None, # ส่ง None หรือค่าที่ไม่ทำให้เงื่อนไข if task_type เป็นจริงในฟังก์ชัน
+        "material": task_inputs["material"],
+        "thickness": task_inputs["thickness"],
+        "design": task_inputs["design"],
+        "output": task_inputs["output"],
+        "ref": branch_ref
+    }
+    result = run_laser_task_with_github_actions(**run_args) # เรียกฟังก์ชัน
+    print("Dispatch Result:", result)
