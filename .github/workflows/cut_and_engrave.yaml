@@ -51,27 +51,27 @@ jobs:
 
       - name: Plan strategy with wizardlm-7b
         run: |
-          ollama run wizardlm:7b "Plan a laser cutting and engraving strategy for material: ${{ github.event.inputs.material }}, thickness: ${{ github.event.inputs.thickness }} mm, design: ${{ github.event.inputs.design }}. Output parameters in JSON format."
+          ollama run wizardlm:7b "Plan a laser cutting and engraving strategy for material: ${{ github.event.inputs.material }}, thickness: ${{ github.event.inputs.thickness }} mm, design: ${{ github.event.inputs.design }}. Output parameters in JSON format." > strategy.json
         env:
           OUTPUT_FILE: strategy.json
 
       - name: Generate G-code with deepseek-coder-v2
         run: |
-          ollama run deepseek-coder-v2 "Generate G-code for laser cutting and engraving based on strategy in strategy.json. Save output to gcode.txt."
+          ollama run deepseek-coder-v2 "Generate G-code for laser cutting and engraving based on strategy in strategy.json. Save output to gcode.txt." > gcode.txt
         env:
           INPUT_FILE: strategy.json
           OUTPUT_FILE: gcode.txt
 
       - name: Coordinate workflow with llama-3.2-8x3b
         run: |
-          ollama run llama3.2:8x3b "Coordinate a multi-agent workflow: use G-code from gcode.txt to control a laser machine. Simulate the process and output logs to process.log."
+          ollama run llama3.2:8x3b "Coordinate a multi-agent workflow: use G-code from gcode.txt to control a laser machine. Simulate the process and output logs to process.log." > process.log
         env:
           INPUT_FILE: gcode.txt
           OUTPUT_FILE: process.log
 
       - name: Analyze and report with dolphin-24b
         run: |
-          ollama run dolphin:24b "Analyze the process log in process.log and write a detailed report. Save the report to report.md."
+          ollama run dolphin:24b "Analyze the process log in process.log and write a detailed report. Save the report to report.md." > report.md
         env:
           INPUT_FILE: process.log
           OUTPUT_FILE: report.md
